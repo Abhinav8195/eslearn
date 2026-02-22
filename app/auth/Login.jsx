@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
 
 const Login = () => {
   const router = useRouter();
@@ -19,9 +20,12 @@ const Login = () => {
   const isDark = scheme === "dark";
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(40)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
 
   const [secure, setSecure] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     Animated.parallel([
@@ -38,29 +42,57 @@ const Login = () => {
     ]).start();
   }, []);
 
+  const validate = () => {
+    let newErrors = {};
+
+    if (!email.trim()) {
+      newErrors.email = true;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = true;
+    }
+
+    if (!password || password.length < 6) {
+      newErrors.password = true;
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      Toast.show({
+        type: "error",
+        text1: "Invalid Credentials",
+        text2: "Please check your email and password",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleLogin = () => {
+    if (!validate()) return;
+
+    Toast.show({
+      type: "success",
+      text1: "Login Successful 🎉",
+    });
+  };
+
   const theme = {
     background: isDark ? "#111621" : "#ffffff",
     textPrimary: isDark ? "#F8FAFC" : "#111827",
     textSecondary: isDark ? "#94A3B8" : "#6B7280",
     inputBg: isDark ? "#1E293B" : "#F3F4F6",
     border: isDark ? "#1E293B" : "#E5E7EB",
+    error: "#EF4444",
   };
+
+  const getBorder = (field) =>
+    errors[field] ? theme.error : theme.border;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar style={isDark ? "light" : "dark"} />
-
-      {/* Back Button */}
-      <TouchableOpacity
-        style={styles.backBtn}
-        onPress={() => router.back()}
-      >
-        <MaterialIcons
-          name="arrow-back-ios-new"
-          size={22}
-          color={theme.textPrimary}
-        />
-      </TouchableOpacity>
 
       <Animated.View
         style={{
@@ -69,10 +101,15 @@ const Login = () => {
           width: "100%",
         }}
       >
-        {/* Header */}
+        <View style={styles.pageHeader}>
+          <Text style={[styles.pageTitle, { color: theme.textPrimary }]}>
+            Login
+          </Text>
+        </View>
+
         <View style={styles.header}>
           <Text style={[styles.title, { color: theme.textPrimary }]}>
-            Welcome Back
+            Welcome Back 👋
           </Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
             Log in to continue your competitive exam preparation with{" "}
@@ -87,18 +124,34 @@ const Login = () => {
           <Text style={[styles.label, { color: theme.textSecondary }]}>
             Email Address
           </Text>
-          <TextInput
-            placeholder="name@example.com"
-            placeholderTextColor="#9CA3AF"
+          <View
             style={[
-              styles.input,
+              styles.inputWrapper,
               {
                 backgroundColor: theme.inputBg,
-                borderColor: theme.border,
-                color: theme.textPrimary,
+                borderColor: getBorder("email"),
               },
             ]}
-          />
+          >
+            <MaterialIcons
+              name="email"
+              size={20}
+              color={theme.textSecondary}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                setErrors((prev) => ({ ...prev, email: false }));
+              }}
+              placeholder="name@example.com"
+              placeholderTextColor="#9CA3AF"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={[styles.input, { color: theme.textPrimary }]}
+            />
+          </View>
         </View>
 
         {/* Password */}
@@ -107,66 +160,73 @@ const Login = () => {
             <Text style={[styles.label, { color: theme.textSecondary }]}>
               Password
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push("/auth/Forgot")}>
               <Text style={{ color: "#2463EB", fontWeight: "600" }}>
                 Forgot?
               </Text>
             </TouchableOpacity>
           </View>
 
-          <View style={styles.passwordContainer}>
+          <View
+            style={[
+              styles.inputWrapper,
+              {
+                backgroundColor: theme.inputBg,
+                borderColor: getBorder("password"),
+              },
+            ]}
+          >
+            <MaterialIcons
+              name="lock"
+              size={20}
+              color={theme.textSecondary}
+              style={{ marginRight: 10 }}
+            />
             <TextInput
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                setErrors((prev) => ({ ...prev, password: false }));
+              }}
               secureTextEntry={secure}
               placeholder="Enter your password"
               placeholderTextColor="#9CA3AF"
-              style={[
-                styles.input,
-                {
-                  backgroundColor: theme.inputBg,
-                  borderColor: theme.border,
-                  color: theme.textPrimary,
-                  paddingRight: 40,
-                },
-              ]}
+              autoCapitalize="none"
+              style={[styles.input, { color: theme.textPrimary }]}
             />
-            <TouchableOpacity
-              style={styles.eyeIcon}
-              onPress={() => setSecure(!secure)}
-            >
+            <TouchableOpacity onPress={() => setSecure(!secure)}>
               <MaterialIcons
                 name={secure ? "visibility" : "visibility-off"}
-                size={22}
-                color="#9CA3AF"
+                size={20}
+                color={theme.textSecondary}
               />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Login Button */}
-        <TouchableOpacity activeOpacity={0.85} style={{ marginTop: 20 }}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={{ marginTop: 25 }}
+          onPress={handleLogin}
+        >
           <LinearGradient
             colors={["#2463EB", "#7C3AED"]}
             style={styles.loginBtn}
           >
             <Text style={styles.loginText}>Log In</Text>
-            <MaterialIcons
-              name="login"
-              size={20}
-              color="#ffffff"
-            />
+            <MaterialIcons name="login" size={20} color="#fff" />
           </LinearGradient>
         </TouchableOpacity>
 
-        {/* Divider */}
-        <View style={styles.divider}>
+         <View style={styles.divider}>
           <View style={[styles.line, { backgroundColor: theme.border }]} />
-          <Text style={{ color: theme.textSecondary }}>
+          <Text style={{ color: theme.textSecondary, fontSize: 13 }}>
             Or continue with
           </Text>
           <View style={[styles.line, { backgroundColor: theme.border }]} />
         </View>
 
-        {/* Google Button */}
         <TouchableOpacity
           style={[
             styles.socialBtn,
@@ -176,21 +236,33 @@ const Login = () => {
             },
           ]}
         >
-          <Text style={{ color: theme.textPrimary }}>
+          <FontAwesome name="google" size={18} color="#DB4437" />
+          <Text
+            style={{
+              color: theme.textPrimary,
+              marginLeft: 10,
+              fontWeight: "600",
+            }}
+          >
             Sign in with Google
           </Text>
         </TouchableOpacity>
 
-        {/* Apple Button */}
         <TouchableOpacity
           style={[
             styles.appleBtn,
             { backgroundColor: isDark ? "#ffffff" : "#111827" },
           ]}
         >
+          <FontAwesome
+            name="apple"
+            size={20}
+            color={isDark ? "#111827" : "#ffffff"}
+          />
           <Text
             style={{
               color: isDark ? "#111827" : "#ffffff",
+              marginLeft: 10,
               fontWeight: "600",
             }}
           >
@@ -198,14 +270,21 @@ const Login = () => {
           </Text>
         </TouchableOpacity>
 
-        {/* Footer */}
-        <View style={{ marginTop: 30, alignItems: "center" }}>
+        <View
+          style={{
+            marginTop: 35,
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
           <Text style={{ color: theme.textSecondary }}>
             Don't have an account?{" "}
+          </Text>
+          <TouchableOpacity onPress={() => router.push("/auth/Signup")}>
             <Text style={{ color: "#2463EB", fontWeight: "700" }}>
               Sign Up
             </Text>
-          </Text>
+          </TouchableOpacity>
         </View>
       </Animated.View>
     </View>
@@ -220,50 +299,53 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 60,
   },
-  backBtn: {
+  pageHeader: {
+    alignItems: "center",
     marginBottom: 20,
+  },
+  pageTitle: {
+    fontSize: 18,
+    fontWeight: "700",
   },
   header: {
     marginBottom: 30,
   },
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   subtitle: {
     fontSize: 15,
     lineHeight: 22,
   },
   inputGroup: {
-    marginBottom: 18,
+    marginBottom: 20,
   },
   label: {
-    fontSize: 14,
+    fontSize: 13,
     marginBottom: 6,
+    fontWeight: "600",
+  },
+  inputWrapper: {
+    height: 52,
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
-    height: 52,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    borderWidth: 1,
+    flex: 1,
   },
   passwordHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 6,
   },
-  passwordContainer: {
-    position: "relative",
-  },
-  eyeIcon: {
-    position: "absolute",
-    right: 12,
-    top: 14,
-  },
   loginBtn: {
     height: 54,
-    borderRadius: 14,
+    borderRadius: 16,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -277,7 +359,7 @@ const styles = StyleSheet.create({
   divider: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 24,
+    marginVertical: 25,
     gap: 10,
   },
   line: {
@@ -286,16 +368,18 @@ const styles = StyleSheet.create({
   },
   socialBtn: {
     height: 52,
-    borderRadius: 12,
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
     marginBottom: 12,
+    flexDirection: "row",
   },
   appleBtn: {
     height: 52,
-    borderRadius: 12,
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row",
   },
 });

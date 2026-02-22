@@ -14,7 +14,7 @@ export default function Index() {
     // 🔥 Replace with AsyncStorage or Firebase check
     // Example fake delay
     setTimeout(() => {
-      const fakeUser = null; // change to {} to simulate logged in
+      const fakeUser = "Abhinav"; // change to {} to simulate logged in
       setUser(fakeUser);
       setCheckingAuth(false);
       setShowSplash(false);

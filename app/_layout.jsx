@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "../constants/Colors";
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   const scheme = useColorScheme();
@@ -20,6 +21,7 @@ export default function RootLayout() {
           },
         }}
       />
+      <Toast />
     </SafeAreaProvider>
   );
 }
