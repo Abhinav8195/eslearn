@@ -76,6 +76,7 @@ const Login = () => {
       type: "success",
       text1: "Login Successful 🎉",
     });
+    router.replace("/(tabs)/home");
   };
 
   const theme = {
@@ -160,7 +161,7 @@ const Login = () => {
             <Text style={[styles.label, { color: theme.textSecondary }]}>
               Password
             </Text>
-            <TouchableOpacity onPress={() => router.push("/auth/Forgot")}>
+            <TouchableOpacity onPress={() => router.push("/auth/Forget")}>
               <Text style={{ color: "#2463EB", fontWeight: "600" }}>
                 Forgot?
               </Text>
