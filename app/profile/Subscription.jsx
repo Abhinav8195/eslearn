@@ -131,7 +131,7 @@ const Subscription = () => {
     selectedPlan === "monthly" ? "₹499" : "₹4,999";
 
   router.push({
-    pathname: "/profile/PaymentSuccess",
+    pathname: "/payment/checkout",
     params: {
       plan: selectedPlan,
       amount: amount,
