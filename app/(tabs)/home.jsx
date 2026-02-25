@@ -12,13 +12,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../constants/Colors";
 import { MotiView } from "moti";
+import Stats from "../../components/homeelements/Stats";
+import RankCard from "../../components/homeelements/RankCard";
+import Recommended from "../../components/homeelements/Recommended";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
   const scheme = useColorScheme();
   const theme = scheme === "dark" ? Colors.dark : Colors.light;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         
         {/* HEADER */}
@@ -50,45 +54,10 @@ const Home = () => {
         </MotiView>
 
         {/* STATS */}
-        <View style={styles.statsGrid}>
-          {["12.5h", "08"].map((item, index) => (
-            <MotiView
-              key={index}
-              from={{ opacity: 0, translateY: 30 }}
-              animate={{ opacity: 1, translateY: 0 }}
-              transition={{ delay: 200 + index * 150 }}
-              style={[styles.card, { backgroundColor: theme.card }]}
-            >
-              <Ionicons
-                name={index === 0 ? "time-outline" : "document-text-outline"}
-                size={22}
-                color={index === 0 ? theme.primary : "#f59e0b"}
-              />
-              <Text style={[styles.statNumber, { color: theme.text }]}>
-                {item}
-              </Text>
-              <Text style={styles.statLabel}>
-                {index === 0 ? "Study Hours" : "Tests Taken"}
-              </Text>
-            </MotiView>
-          ))}
-        </View>
+        <Stats />
 
         {/* RANK CARD */}
-        <MotiView
-          from={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 500 }}
-        >
-          <LinearGradient
-            colors={[theme.primary, theme.secondary]}
-            style={styles.rankCard}
-          >
-            <Text style={styles.rankSmall}>Global Leaderboard</Text>
-            <Text style={styles.rankBig}>#42</Text>
-            <Text style={styles.rankSmall}>Top 5% of students</Text>
-          </LinearGradient>
-        </MotiView>
+        <RankCard />
 
         {/* CONTINUE */}
         <MotiView
@@ -148,43 +117,11 @@ const Home = () => {
         </MotiView>
 
         {/* RECOMMENDED */}
-        <MotiView
-          from={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 900 }}
-        >
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>
-            Recommended
-          </Text>
-
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {[1, 2].map((item, index) => (
-              <MotiView
-                key={index}
-                from={{ opacity: 0, translateX: 50 }}
-                animate={{ opacity: 1, translateX: 0 }}
-                transition={{ delay: 1000 + index * 200 }}
-                style={[styles.recommendCard, { backgroundColor: theme.card }]}
-              >
-                <Image
-                  source={{ uri: `https://picsum.photos/20${index}/150` }}
-                  style={styles.recommendImage}
-                />
-                <Text
-                  style={[styles.recommendTitle, { color: theme.text }]}
-                >
-                  {index === 0
-                    ? "Advanced Calculus II"
-                    : "Organic Compounds"}
-                </Text>
-              </MotiView>
-            ))}
-          </ScrollView>
-        </MotiView>
+       <Recommended/>
 
         <View style={{ height: 120 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -195,7 +132,6 @@ const styles = StyleSheet.create({
 
   header: {
     paddingHorizontal: 20,
-    paddingTop: 60,
     paddingBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -243,56 +179,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
-  statsGrid: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    gap: 10,
-  },
+  
 
-  card: {
-    flex: 1,
-    padding: 16,
-    borderRadius: 16,
-    elevation: 4,
-  },
-
-  statNumber: {
-    fontSize: 20,
-    fontWeight: "700",
-    marginTop: 8,
-  },
-
-  statLabel: {
-    fontSize: 12,
-    opacity: 0.6,
-  },
-
-  rankCard: {
-    margin: 20,
-    padding: 20,
-    borderRadius: 20,
-  },
-
-  rankSmall: {
-    color: "#fff",
-    opacity: 0.8,
-  },
-
-  rankBig: {
-    color: "#fff",
-    fontSize: 28,
-    fontWeight: "700",
-    marginVertical: 6,
-  },
-
-  sectionTitle: {
+    sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
     paddingHorizontal: 20,
     marginTop: 10,
     marginBottom: 10,
   },
+
+
 
   continueCard: {
     marginHorizontal: 20,
@@ -322,7 +219,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#eee",
+    backgroundColor: "#e9effd",
   },
 
   progressBar: {
@@ -352,21 +249,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  recommendCard: {
-    width: 180,
-    marginLeft: 20,
-    borderRadius: 16,
-    padding: 10,
-  },
-
-  recommendImage: {
-    width: "100%",
-    height: 110,
-    borderRadius: 12,
-  },
-
-  recommendTitle: {
-    marginTop: 8,
-    fontWeight: "600",
-  },
+  
 });
