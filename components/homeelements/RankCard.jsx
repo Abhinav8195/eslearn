@@ -1,15 +1,23 @@
-import { StyleSheet, Text, useColorScheme, View, Image } from "react-native";
+import { StyleSheet, Text, useColorScheme, View, Image, Pressable } from "react-native";
 import React from "react";
 import { MotiView } from "moti";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
+import { router } from "expo-router";
 
 const RankCard = () => {
   const scheme = useColorScheme();
   const theme = scheme === "dark" ? Colors.dark : Colors.light;
 
   return (
+     <Pressable
+      onPress={() => router.push("/pages/Leaderboard")}  
+
+      style={({ pressed }) => [
+        { transform: [{ scale: pressed ? 0.97 : 1 }] },
+      ]}
+    >
     <MotiView
       from={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -51,6 +59,7 @@ const RankCard = () => {
         </View>
       </LinearGradient>
     </MotiView>
+    </Pressable>
   );
 };
 

@@ -123,18 +123,20 @@ const Profile = () => {
             title="My Subscription"
             rightText="Active"
             index={0}
-              onPress={() => router.push("/profile/Subscription")}
+            onPress={() => router.push("/profile/Subscription")}
           />
           <MenuItem
             icon="download-outline"
             title="Downloaded Content"
             rightText="1.2 GB"
             index={1}
+            onPress={() => router.push("/profile/DownloadContent")}
           />
           <MenuItem
             icon="school-outline"
             title="Exam Interests"
             index={2}
+            onPress={() => router.push("/profile/ExamInterest")}
           />
         </View>
 
@@ -176,7 +178,7 @@ const Profile = () => {
         </MotiView>
 
         <Text style={styles.version}>
-          Version 2.4.1 (Build 108)
+          Version 0.0.1 (Build 001)
         </Text>
       </ScrollView>
     </SafeAreaView>

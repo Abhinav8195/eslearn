@@ -16,6 +16,7 @@ import Stats from "../../components/homeelements/Stats";
 import RankCard from "../../components/homeelements/RankCard";
 import Recommended from "../../components/homeelements/Recommended";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 
 const Home = () => {
   const scheme = useColorScheme();
@@ -99,7 +100,7 @@ const Home = () => {
             </View>
 
             {/* Button Animation */}
-            <TouchableOpacity activeOpacity={0.9}>
+            <TouchableOpacity activeOpacity={0.9} onPress={()=>router.push('/pages/Resume')}>
               <MotiView
                 whileTap={{ scale: 0.95 }}
                 style={{ borderRadius: 14 }}
