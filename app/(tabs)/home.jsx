@@ -43,10 +43,31 @@ const Home = () => {
           </View>
 
           <View style={styles.headerRight}>
-            <View style={styles.notification}>
-              <Ionicons name="notifications-outline" size={20} color={theme.text} />
-              <View style={styles.redDot} />
-            </View>
+            <TouchableOpacity
+  onPress={() => router.push("/pages/Notification")}
+  activeOpacity={0.8}
+  style={[
+    styles.notification,
+    {
+      backgroundColor:
+        scheme === "dark"
+          ? theme.card
+          : "#F3F4F6",
+      borderColor:
+        scheme === "dark"
+          ? "#334155"
+          : "#E5E7EB",
+    },
+  ]}
+>
+  <Ionicons
+    name="notifications-outline"
+    size={20}
+    color={theme.text}
+  />
+
+  <View style={styles.redDot} />
+</TouchableOpacity>
             <Image
               source={{ uri: "https://i.pravatar.cc/100" }}
               style={styles.avatar}
